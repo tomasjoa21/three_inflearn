@@ -1,0 +1,55 @@
+물리엔진을 사용하기 위해 설치해야 할 모듈
+# npm i cannon-es
+
+import * as CANNON from 'cannon-es';
+.....
+.....
+	// 물리엔진(Cannon)
+	const cannonWorld = new CANNON.World();
+	cannonWorld.gravity.set(0, -10, 0); //y축 방향으로 중력을 설정한다.(-9.82)
+
+	// 물리엔진이 적용된 바닥 생성
+	const floorShape = new CANNON.Plane();
+	const floorBody = new CANNON.Body({
+		mass: 0, // 이설정을 안하면 물리엔진이 적용된 바닥이 한없이 떨어진다.
+		position: new CANNON.Vec3(0, 0, 0), // 바닥의 위치
+		shape: floorShape // 바닥의 형태
+	});
+	floorBody.quaternion.setFromAxisAngle(
+		new CANNON.Vec3(-1, 0, 0),
+		Math.PI / 2
+	); // 바닥의 회전값을 설정한다.
+	cannonWorld.addBody(floorBody); // 바닥을 물리엔진에 추가한다.
+
+	// 물리엔진이 적용된 박스 생성
+	const boxShape = new CANNON.Box(new CANNON.Vec3(0.25, 2.5, 0.25));
+	const boxBody = new CANNON.Body({
+		mass: 1, // 박스의 무게
+		position: new CANNON.Vec3(0, 10, 0), // 박스의 위치
+		shape: boxShape // 박스의 형태
+	});
+	cannonWorld.addBody(boxBody); // 박스를 물리엔진에 추가한다.
+....
+    const boxGeometry = new THREE.BoxGeometry(0.5, 5, 0.5);
+....
+    // 그리기
+    const clock = new THREE.Clock();
+    function draw(){
+        const delta = clock.getDelta();
+
+		// 물리엔진 업데이트
+		// console.log(delta);
+		// 물리엔진은 1초에 60번 업데이트한다.(모니터 주사율(맥북성능)에 따라 1/60(성능보통) 또는 1/120(성능높음))
+		let cannonStepTime = (delta < 0.01) ? 1 / 120 : 1 / 60;
+		cannonWorld.step(cannonStepTime, delta, 3); //인수: 시간, 이전 프레임과의 시간차, 반복횟수
+		// floorMesh가 캐논 바닥바디를 따라가도록 설정한다.
+		// (하지만 캐논 바닥바디는 움직이지 않는다.) 그래서 주석처리해도 된다.
+		// floorMesh.position.copy(floorBody.position);
+		// boxMesh가 캐논 박스바디를 따라가도록 설정한다.
+		boxMesh.position.copy(boxBody.position);
+		// boxMesh의 회전값을 캐논 박스바디의 회전값으로 설정한다.
+		boxMesh.quaternion.copy(boxBody.quaternion);
+
+		renderer.render(scene, camera);
+		renderer.setAnimationLoop(draw);
+    }

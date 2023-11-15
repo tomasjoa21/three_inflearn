@@ -1,0 +1,38 @@
+body {
+	margin: 0;
+}
+#three-canvas {
+	position: fixed;
+	left: 0;
+	top: 0;
+}
+
+.sections{
+	position:relative;
+	z-index: 1;
+}
+.section{
+	box-sizing: border-box;
+	/*
+	기본폰트 사이즈가 예를 들어 10px이라면
+	1rem은 10px이 된다.그러므로 3rem은 30px이 된다.
+	하지만 기본폰트 사이즈가 정의되어 있지 않으면 1rem은 16px이 된다.
+	그러므로 5rem은 80px이 된다.
+	*/
+	padding: 5rem;
+	height:100vh;
+}
+.section h2{
+	margin:0;
+	/*
+	예를 들어 
+	브라우저의 너비가 1100px이고, 높이가 700px이라면
+	1vmin은 7px가 되고, 1vmax는 11px이 된다.
+	브라우저의 너비가 800px이고, 높이가 1080px이라면
+	1vmin은 8px이 되고, 1vmax는 10.8px이 된다.
+	*/
+	font-size: 10vmin;
+}
+.section:nth-child(odd){
+	text-align:right;
+}

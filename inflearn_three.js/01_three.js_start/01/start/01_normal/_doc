@@ -1,0 +1,5 @@
+https://threejs.org
+1. 왼쪽 메뉴에서 download를 클릭해서 threejs관련 파일을 다운로드 한다
+2. build->three.js를 내 프로젝트 폴더에 복사한다.
+3. threejs.org에서 왼쪽메뉴의 documentation를 클릭
+4. Create ascene을 클릭해서 샘플코드를 복사한다.
