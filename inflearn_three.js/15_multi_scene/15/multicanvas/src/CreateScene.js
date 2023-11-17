@@ -37,4 +37,41 @@ export class CreateScene {
 
         this.scene.add(this.camera);
     }
+
+    set(func){
+        func();
+    }
+
+    render(){
+        const renderer = this.renderer;
+        // 스크롤시 실시간으로 요소의 크기와 위치정보를 가져와야 한다.
+        const rect = this.elem.getBoundingClientRect();
+        // 좌우 스크롤후 화면에서 사라지면 더이상 랜더링 할 필요가 없다.
+        if(
+            rect.top > renderer.domElement.clientHeight ||
+            rect.bottom < 0 || 
+            rect.left > renderer.domElement.clientWidth ||
+            rect.right < 0
+        ){
+            return;
+        }
+
+        // canvasBottom: 캔버스의 하단에서 요소의 하단까지의 거리
+        const canvasBottom = renderer.domElement.clientHeight - rect.bottom;
+        // setScissor(left, bottom, width, height) 함수는 뷰포트 내에서 영역을 지정하여 클리핑(잘라내기)하는 기능을 제공하는 함수입니다. 이 함수를 사용하면 특정 영역 내의 요소만을 렌더링할 수 있습니다.
+        // bottom: 캔버스의 하단에서 요소의 하단까지의 거리
+        // width: 요소의 너비
+        // height: 요소의 높이
+        renderer.setScissor(rect.left, canvasBottom, rect.width, rect.height);
+        // setViewport(left, bottom, width, height) 함수는 뷰포트의 크기와 위치를 설정하는 기능을 제공하는 함수입니다. 이 함수를 사용하여 뷰포트를 조정하면 원하는 영역에 대해 렌더링할 수 있습니다.
+        // left: 뷰포트의 왼쪽에서 요소의 왼쪽까지의 거리
+        // bottom: 뷰포트의 하단에서 요소의 하단까지의 거리
+        // width: 요소의 너비
+        // height: 요소의 높이
+        renderer.setViewport(rect.left, canvasBottom, rect.width, rect.height);
+        // setScissorTest(boolean) 메서드는 캔버스의 위에서의 설정을 적용할지 여부를 설정한다. 이 함수는 셋트로 항상 사용한다.
+        renderer.setScissorTest(true);
+
+        renderer.render(this.scene, this.camera);
+    }
 }
