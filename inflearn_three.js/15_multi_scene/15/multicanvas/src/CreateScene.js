@@ -36,6 +36,8 @@ export class CreateScene {
         this.camera.position.z = cameraPosition.z;
 
         this.scene.add(this.camera);
+
+        this.meshes = [];
     }
 
     set(func){
@@ -55,6 +57,11 @@ export class CreateScene {
         ){
             return;
         }
+
+        // 화면사이즈가 변경되면 각 화면 모델의 비율도 변경되게 하기 위해 각 화면의 비율을 계산한다.
+        this.camera.aspect = rect.width / rect.height;
+        // 비율을 다시 계산했으므로 updateProjectionMatrix() 메서드를 호출하여 변경된 비율을 적용한다.
+        this.camera.updateProjectionMatrix();
 
         // canvasBottom: 캔버스의 하단에서 요소의 하단까지의 거리
         const canvasBottom = renderer.domElement.clientHeight - rect.bottom;
